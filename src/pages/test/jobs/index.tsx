@@ -41,9 +41,12 @@ const Jobs: NextPage<JobsProps> = ({ jobs: initialJobs = [] }) => {
                 postingDateRange: jobsFilters.postingDateRange ? "" : "7d",
             }
         })
+
+        console.log({jobsFilters})
     }
 
     const fetchJobs = useCallback(async () => { // useCallback to prevent multiple re-rendering and request looping for api
+        console.log('fetchJobs')
         setIsLoading(true)
         try {
             const response = await api.post<{ jobs: JobDTO[] }>('/jobs', {
