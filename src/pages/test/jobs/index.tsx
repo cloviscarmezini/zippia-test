@@ -11,7 +11,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useFirstRender } from '@/hooks/useFirstRender';
 import { Spinner } from '@/components/Spinner';
 
-
 interface JobsProps {
     jobs: JobDTO[]
 }
@@ -25,11 +24,13 @@ const Jobs: NextPage<JobsProps> = ({ jobs: initialJobs = [] }) => {
     const [jobsFilters, setJobsFilters] = useState<JobsFiltersProps>({});
     const [isLoading, setIsLoading] = useState(false);
     const { isMobile } = useMobile();
-    const [sliderRef] = useKeenSlider({
+    const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
+        initial: 0,
         slides: {
-          perView: 1,
-          spacing: 48
-        }
+          perView: 1.1,
+          spacing: 5
+        },
+        renderMode: 'precision'
     });
 
     const isFirstRender = useFirstRender();
@@ -67,6 +68,10 @@ const Jobs: NextPage<JobsProps> = ({ jobs: initialJobs = [] }) => {
             alert('Something went wrong!')
         } finally {
             setIsLoading(false);
+
+            if(isMobile) {
+                instanceRef.current?.moveToIdx(0)
+            }
         }
     }, [jobsFilters])
 
@@ -99,9 +104,9 @@ const Jobs: NextPage<JobsProps> = ({ jobs: initialJobs = [] }) => {
                 {/* Validation to show carousel in mobile and a list for desktops */}
                 { isMobile ? (
                     <div className="keen-slider" ref={sliderRef}>
-                        { jobs.map(job=> {
+                        { jobs.map((job, index)=> {
                             return (
-                                <div className="keen-slider__slide" key={job.jobId}>
+                                <div className="keen-slider__slide" key={index}>
                                     <JobCard job={job} />
                                 </div>
                             )

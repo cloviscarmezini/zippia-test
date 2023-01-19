@@ -50,7 +50,10 @@ export function JobCard({ job }: JobCardProps) {
                         </p>
                     </header>
                     <div
-                        className="text-zync-400 mt-6"
+                        className="text-zync-400 mt-6 text-ellipsis overflow-hidden"
+                        style={{
+                            maxHeight: isContentExpanded ? '100%' : '260px'
+                        }}
                         dangerouslySetInnerHTML={{
                             __html: xss(jobDescription) //Sanitize untrusted HTML
                         }}
